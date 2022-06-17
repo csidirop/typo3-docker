@@ -9,6 +9,7 @@ EXPOSE 80
 # This Dockerfile aimes to install a working typo3 v9 instance which serves as a basisimage. 
 # Based on this guide: https://github.com/UB-Mannheim/kitodo-presentation/wiki
 
+#TODO: remove DB in future for use with an seperate DB docker image!
 # Upgrade system & install MariaDB (see https://mariadb.org/download/?t=repo-config&d=Debian+11+%22Bullseye%22&v=10.8):
 RUN apt-get update \
   && apt-get -y upgrade \
