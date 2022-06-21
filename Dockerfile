@@ -5,7 +5,7 @@ LABEL maintainer='Christos Sidiropoulos <Christos.Sidiropoulos@uni-mannheim.de>'
 
 EXPOSE 80
 
-## TYPO3 r9 ##
+## TYPO3 r9.5 ##
 # This Dockerfile aimes to install a working typo3 v9 instance which serves as a basisimage. 
 # Based on this guide: https://github.com/UB-Mannheim/kitodo-presentation/wiki
 
@@ -34,12 +34,11 @@ RUN apt-get install -y --no-install-recommends \
     php-mysql \
     php-xml \
     php-zip \
-    #composer \
-    git\
-    zip\
     ghostscript \
     graphicsmagick \
     graphicsmagick-imagemagick-compat \
+    #composer \
+    git \
   && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && php composer-setup.php --install-dir /usr/bin --filename composer \
   && php -r "unlink('composer-setup.php');" \
