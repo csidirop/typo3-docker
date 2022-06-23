@@ -3,30 +3,28 @@ FROM php:7.4-apache
 
 LABEL maintainer='Christos Sidiropoulos <Christos.Sidiropoulos@uni-mannheim.de>'
 
+ENV DB_ADDR=localhost
+ENV DB_PORT=3306
+
 EXPOSE 80
 
 ## TYPO3 r9 ##
 # This Dockerfile aimes to install a working typo3 v9 instance which serves as a basisimage. 
 # Based on this guide: https://github.com/UB-Mannheim/kitodo-presentation/wiki
 
-#TODO: remove DB in future for use with an seperate DB docker image!
-# Upgrade system & install MariaDB (see https://mariadb.org/download/?t=repo-config&d=Debian+11+%22Bullseye%22&v=10.8):
-RUN apt-get update \
-  && apt-get -y upgrade \
-  && apt-get install -y --no-install-recommends apt-transport-https curl \
-  && curl -o /etc/apt/trusted.gpg.d/mariadb_release_signing_key.asc 'https://mariadb.org/mariadb_release_signing_key.asc' \
-  && sh -c "echo 'deb https://mirror1.hs-esslingen.de/pub/Mirrors/mariadb/repo/10.8/debian bullseye main' >>/etc/apt/sources.list" \
-  && apt-get update \
-  && apt-get install -y --no-install-recommends mariadb-server 
+# Workaround for "E: Package 'php-XXX' has no installation candidate" from https://hub.docker.com/_/php/ :
+RUN rm /etc/apt/preferences.d/no-debian-php
 
 #For baseimages other than php:7.4-apache:
 #RUN apt-get install -y apache2 
 
-# Workaround for "E: Package 'php-XXX' has no installation candidate" from https://hub.docker.com/_/php/ :
-RUN rm /etc/apt/preferences.d/no-debian-php
-
-# Install further php dependencies & composer & image processing setup:
-RUN apt-get install -y --no-install-recommends \
+#TODO: remove DB in future for use with an seperate DB docker image!
+# Upgrade system & install MariaDB (see https://mariadb.org/download/?t=repo-config&d=Debian+11+%22Bullseye%22&v=10.8):
+# And install further php dependencies & composer & image processing setup:
+RUN apt-get update \
+  && apt-get -y upgrade \
+  && apt-get install -y --no-install-recommends \
+    mariadb-server \
     libapache2-mod-php \
     php-curl \
     php-gd \
@@ -34,10 +32,17 @@ RUN apt-get install -y --no-install-recommends \
     php-mysql \
     php-xml \
     php-zip \
-    composer \
     ghostscript \
     graphicsmagick \
     graphicsmagick-imagemagick-compat \
+    #composer \
+    git \
+    unzip \
+  && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+  && php composer-setup.php --install-dir /usr/bin --filename composer \
+  && php -r "unlink('composer-setup.php');" \
+  && apt-get autoremove -y \
+  && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
 # Start and setup MariaDB:
