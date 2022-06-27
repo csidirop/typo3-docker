@@ -1,4 +1,4 @@
-# Install PHP 7.4 with Apache2 on Debian 11 bullseye:
+# Baseimage PHP 7.4 with Apache2 on Debian 11 bullseye:
 FROM php:7.4-apache 
 
 LABEL maintainer='Christos Sidiropoulos <Christos.Sidiropoulos@uni-mannheim.de>'
