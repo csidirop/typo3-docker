@@ -60,5 +60,7 @@ RUN composer create-project typo3/cms-base-distribution:^9 typo3 \
   && phpenmod typo3 \
   && service apache2 restart
 
+# Copy startup script into the container:
 COPY docker-entrypoint.sh /
-ENTRYPOINT ["/docker-entrypoint.sh"]
+# Run startup script & start apache2 (https://github.com/docker-library/php/blob/master/7.4/bullseye/apache/apache2-foreground)
+CMD /docker-entrypoint.sh & apache2-foreground 

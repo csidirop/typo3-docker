@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 
 services:
   db:
@@ -11,15 +11,16 @@ services:
     #volumes:
     #  - ./database:/var/lib/mysql
     restart: unless-stopped
-    #restart: always
   main:
     build: .
-    image: csidirop/typo3-v9:9.5-composer
+    image: csidirop/typo3-v9:9.5-compose
     ports:
       - "127.0.0.1:80:80"
+    environment:
+      - DB_ADDR=db
+      - DB_PORT=3306
     #volumes:
     #  - ./config:/usr/local/kitodo
     depends_on:
       - db
-    restart: unless-stopped
-    #restart: always
+    #restart: unless-stopped
