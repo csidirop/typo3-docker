@@ -18,5 +18,5 @@ There are different [Branches](https://github.com/csidirop/typo3-docker/branches
 ### Run images:
     docker compose up 
 
-# Set up typo3 with typo3 install tool in your browser:
+### Set up typo3 with typo3 install tool in your browser:
 http://localhost/typo3/install.php
