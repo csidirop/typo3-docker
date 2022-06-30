@@ -33,8 +33,11 @@ RUN apt-get update \
     ghostscript \
     graphicsmagick \
     graphicsmagick-imagemagick-compat \
+    # for newest composer version:
     git \
     unzip \
+    # for docker entrypoint:
+    wait-for-it \ 
   # newest composer version:    
   && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && php composer-setup.php --install-dir /usr/bin --filename composer \
