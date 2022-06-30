@@ -1,4 +1,4 @@
-# Install PHP 7.4 with Apache2 on Debian 11 bullseye:
+# Baseimage PHP 7.4 with Apache2 on Debian 11 bullseye:
 FROM php:7.4-apache 
 
 LABEL maintainer='Christos Sidiropoulos <Christos.Sidiropoulos@uni-mannheim.de>'
@@ -62,5 +62,7 @@ RUN composer create-project typo3/cms-base-distribution:^10 typo3 \
 
 # Copy startup script into the container:
 COPY docker-entrypoint.sh /
+# Fix wrong line endings in the startup script:
+RUN sed -i.bak 's/\r$//' /docker-entrypoint.sh
 # Run startup script & start apache2 (https://github.com/docker-library/php/blob/master/7.4/bullseye/apache/apache2-foreground)
 CMD /docker-entrypoint.sh & apache2-foreground 
