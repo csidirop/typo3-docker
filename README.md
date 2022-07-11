@@ -1,6 +1,8 @@
 # Typo3 Docker
 This repo provides a simple docker image for [Typo3](https://typo3.org/).
 
+All branches are WIP!
+
 # Docker instructions
 ### Select branch
 There are different [Branches](https://github.com/csidirop/typo3-docker/branches) that serve to provide different installations. Those provide following versions:
