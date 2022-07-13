@@ -45,7 +45,11 @@ RUN apt-get update \
   # cleanup:
   && apt-get autoremove -y \
   && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/* \
+  # apache mods:
+  && a2enmod headers \
+  && a2enmod expires \
+  && a2enmod rewrite
 
 # Install and setup Typo3 & fix Typo3 warnings/problems:
 WORKDIR /var/www/
