@@ -60,6 +60,7 @@ RUN composer create-project --no-install typo3/cms-base-distribution:^9 typo3 \
   && chown -R www-data: typo3 \
   && cd html \
   && ln -s ../typo3/public/* . \
+  && ln -s ../typo3/public/.htaccess \
   && a2enmod php7.4 \
   && echo '<Directory /var/www/html>\n  AllowOverride All\n</Directory>' >> /etc/apache2/sites-available/typo3.conf \
   && a2ensite typo3 \
