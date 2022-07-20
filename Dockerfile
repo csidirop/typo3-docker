@@ -45,7 +45,11 @@ RUN apt-get update \
   # cleanup:
   && apt-get autoremove -y \
   && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/* \
+  # apache mods:
+  && a2enmod headers \
+  && a2enmod expires \
+  && a2enmod rewrite
 
 # Install and setup Typo3 & fix Typo3 warnings/problems:
 WORKDIR /var/www/
@@ -54,6 +58,7 @@ RUN composer create-project typo3/cms-base-distribution:^11 typo3 \
   && chown -R www-data: typo3 \
   && cd html \
   && ln -s ../typo3/public/* . \
+  && ln -s ../typo3/public/.htaccess \
   && a2enmod php7.4 \
   && echo '<Directory /var/www/html>\n  AllowOverride All\n</Directory>' >> /etc/apache2/sites-available/typo3.conf \
   && a2ensite typo3 \
