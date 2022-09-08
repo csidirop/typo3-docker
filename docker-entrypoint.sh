@@ -9,7 +9,7 @@ wait-for-it -t 0 ${DB_ADDR}:${DB_PORT}
 
 # Database configuration:
 echo '[MAIN] DB configuration:'
-mysql -h db -e "GRANT ALL ON typo3.* TO typo3@localhost IDENTIFIED BY 'password';" 
+mysql -h db -e "GRANT ALL ON typo3.* TO typo3@localhost IDENTIFIED BY 'password';"
 mysql -h db -e "FLUSH PRIVILEGES;"
 
 # Check status:
