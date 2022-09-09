@@ -1,4 +1,4 @@
-# Typo3 Docker
+# TYPO3 Docker
 This repo provides a simple and clean [docker](https://www.docker.com/) image for different [TYPO3](https://typo3.org/) versions.
 
 _All branches are WIP!_
