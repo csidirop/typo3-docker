@@ -5,6 +5,9 @@ LABEL maintainer='Christos Sidiropoulos <Christos.Sidiropoulos@uni-mannheim.de>'
 
 ENV DB_ADDR=localhost
 ENV DB_PORT=3306
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 EXPOSE 80
 
@@ -22,6 +25,7 @@ RUN rm /etc/apt/preferences.d/no-debian-php
 RUN apt-get update \
   && apt-get -y upgrade \
   && apt-get install -y --no-install-recommends \
+    # database & php dependencies:
     mariadb-client \
     libapache2-mod-php \
     php-curl \
@@ -30,6 +34,8 @@ RUN apt-get update \
     php-mysql \
     php-xml \
     php-zip \
+    locales \
+    # TYPO3 dependencies:
     ghostscript \
     graphicsmagick \
     graphicsmagick-imagemagick-compat \
@@ -37,7 +43,7 @@ RUN apt-get update \
     git \
     unzip \
     # for docker entrypoint:
-    wait-for-it \
+    wait-for-it \ 
   # newest composer version:
   && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && php composer-setup.php --install-dir /usr/bin --filename composer \
@@ -49,13 +55,14 @@ RUN apt-get update \
   # apache mods:
   && a2enmod headers \
   && a2enmod expires \
-  && a2enmod rewrite
+  && a2enmod rewrite \
+  # Gen locales:
+  && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
+  && locale-gen
 
 # Install and setup Typo3 & fix Typo3 warnings/problems:
 WORKDIR /var/www/
-RUN composer create-project --no-install typo3/cms-base-distribution:^9 typo3 \
-  && composer config --working-dir typo3/ --no-plugins allow-plugins.helhum/typo3-console-plugin true \
-  && composer install --working-dir typo3/ \
+RUN composer create-project typo3/cms-base-distribution:^11 typo3 \
   && touch typo3/public/FIRST_INSTALL \
   && chown -R www-data: typo3 \
   && cd html \
