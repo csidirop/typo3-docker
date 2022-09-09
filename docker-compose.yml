@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   db:
-    image: mariadb:10.8
+    image: mariadb:10
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
       - MYSQL_DATABASE=typo3-v11
@@ -12,7 +12,7 @@ services:
     restart: unless-stopped
   main:
     build: .
-    image: csidirop/typo3-v11:11.5
+    image: csidirop/typo3-v11:11.5-220909
     ports:
       - "127.0.0.1:80:80"
     environment:
