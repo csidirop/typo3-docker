@@ -5,6 +5,9 @@ LABEL maintainer='Christos Sidiropoulos <Christos.Sidiropoulos@uni-mannheim.de>'
 
 ENV DB_ADDR=localhost
 ENV DB_PORT=3306
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 EXPOSE 80
 
@@ -31,6 +34,7 @@ RUN apt-get update \
     php-mysql \
     php-xml \
     php-zip \
+    locales \
     # TYPO3 dependencies:
     ghostscript \
     graphicsmagick \
@@ -51,7 +55,10 @@ RUN apt-get update \
   # apache mods:
   && a2enmod headers \
   && a2enmod expires \
-  && a2enmod rewrite
+  && a2enmod rewrite \
+  # Gen locales:
+  && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
+  && locale-gen
 
 # Install and setup Typo3 & fix Typo3 warnings/problems:
 WORKDIR /var/www/
