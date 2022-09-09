@@ -1,5 +1,5 @@
 # Baseimage PHP 7.4 with Apache2 on Debian 11 bullseye:
-FROM php:7.4-apache 
+FROM php:7.4-apache
 
 LABEL maintainer='Christos Sidiropoulos <Christos.Sidiropoulos@uni-mannheim.de>'
 
@@ -9,19 +9,20 @@ ENV DB_PORT=3306
 EXPOSE 80
 
 ## TYPO3 r11 ##
-# This Dockerfile aimes to install a working typo3 v11 instance which serves as a basisimage. 
+# This Dockerfile aimes to install a working typo3 v11 instance which serves as a basisimage.
 # Based on this guide: https://github.com/UB-Mannheim/kitodo-presentation/wiki
 
 # Workaround for "E: Package 'php-XXX' has no installation candidate" from https://hub.docker.com/_/php/ :
 RUN rm /etc/apt/preferences.d/no-debian-php
 
 #For baseimages other than php:7.4-apache:
-#RUN apt-get install -y apache2 
+#RUN apt-get install -y apache2
 
 # Upgrade system and install further php dependencies & composer & image processing setup:
 RUN apt-get update \
   && apt-get -y upgrade \
   && apt-get install -y --no-install-recommends \
+    # database & php dependencies:
     mariadb-client \
     libapache2-mod-php \
     php-curl \
@@ -30,6 +31,7 @@ RUN apt-get update \
     php-mysql \
     php-xml \
     php-zip \
+    # TYPO3 dependencies:
     ghostscript \
     graphicsmagick \
     graphicsmagick-imagemagick-compat \
@@ -38,7 +40,7 @@ RUN apt-get update \
     unzip \
     # for docker entrypoint:
     wait-for-it \ 
-  # newest composer version:    
+  # newest composer version:
   && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && php composer-setup.php --install-dir /usr/bin --filename composer \
   && php -r "unlink('composer-setup.php');" \
@@ -73,4 +75,4 @@ COPY docker-entrypoint.sh /
 # Fix wrong line endings in the startup script:
 RUN sed -i.bak 's/\r$//' /docker-entrypoint.sh
 # Run startup script & start apache2 (https://github.com/docker-library/php/blob/master/7.4/bullseye/apache/apache2-foreground)
-CMD /docker-entrypoint.sh & apache2-foreground 
+CMD /docker-entrypoint.sh & apache2-foreground
