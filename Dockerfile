@@ -62,7 +62,9 @@ RUN apt-get update \
 
 # Install and setup Typo3 & fix Typo3 warnings/problems:
 WORKDIR /var/www/
-RUN composer create-project typo3/cms-base-distribution:^11 typo3 \
+RUN composer create-project --no-install typo3/cms-base-distribution:^9 typo3 \
+  && composer config --working-dir typo3/ --no-plugins allow-plugins.helhum/typo3-console-plugin true \
+  && composer install --working-dir typo3/ \
   && touch typo3/public/FIRST_INSTALL \
   && chown -R www-data: typo3 \
   && cd html \
