@@ -1,19 +1,13 @@
 #!/bin/sh
 
-# Work in progress!
-
 echo '[MAIN] Running startup script:'
 
-# Wait for db to be ready:
+# Wait for db to be ready: (https://docs.docker.com/compose/startup-order/)
 wait-for-it -t 0 ${DB_ADDR}:${DB_PORT}
 
-# Database configuration:
-echo '[MAIN] DB configuration:'
-mysql -h db -e "GRANT ALL ON typo3.* TO typo3@localhost IDENTIFIED BY 'password';" 
-mysql -h db -e "FLUSH PRIVILEGES;"
+# Additional configuration:
+# echo '[MAIN] Additional configuration:'
+# ADD CODE HERE
 
-# Check status:
-echo '[MAIN] Check apache status:'
-service apache2 status
-
+# Finished:
 echo '[MAIN] Ready for setup: http://localhost/typo3/ '
