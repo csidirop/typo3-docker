@@ -73,11 +73,11 @@ RUN composer create-project --no-install typo3/cms-base-distribution:^11 typo3 \
   && a2enmod php7.4 \
   && echo '<Directory /var/www/html>\n  AllowOverride All\n</Directory>' >> /etc/apache2/sites-available/typo3.conf \
   && a2ensite typo3 \
+  && sed -i '12a UseCanonicalName On' /etc/apache2/sites-available/000-default.conf \
   # Fixing Low PHP script execution time & PHP max_input_vars very low:
   && echo ';Settings for Typo3: \nmax_execution_time=240 \nmax_input_vars=1500' >> /etc/php/7.4/mods-available/typo3.ini \
   && echo 'xdebug.max_nesting_level = 500' >> /etc/php/7.4/apache2/conf.d/20-xdebug.ini \
-  && phpenmod typo3 \
-  && service apache2 restart
+  && phpenmod typo3
 
 # Copy startup script into the container:
 COPY docker-entrypoint.sh /
