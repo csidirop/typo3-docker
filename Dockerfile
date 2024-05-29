@@ -59,7 +59,10 @@ RUN apt-get update \
   # Gen locales:
   && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
   && sed -i '/de_DE.UTF-8/s/^# //g' /etc/locale.gen \
-  && locale-gen
+  && locale-gen \
+  && chown -R www-data:www-data /var/www/
+
+USER www-data
 
 # Install and setup Typo3 & fix Typo3 warnings/problems:
 WORKDIR /var/www/
