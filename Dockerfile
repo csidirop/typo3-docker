@@ -1,4 +1,4 @@
-# Baseimage PHP 7.4 with Apache2 on Debian 11 bullseye:
+# Baseimage PHP 8.3 with Apache2 on Debian 11 bullseye:
 FROM php:8.3-apache
 
 LABEL maintainer='Christos Sidiropoulos <Christos.Sidiropoulos@uni-mannheim.de>'
@@ -17,9 +17,6 @@ EXPOSE 80
 
 # Workaround for "E: Package 'php-XXX' has no installation candidate" from https://hub.docker.com/_/php/ :
 RUN rm /etc/apt/preferences.d/no-debian-php
-
-#For baseimages other than php:7.4-apache:
-#RUN apt-get install -y apache2
 
 # Upgrade system and install further php dependencies & composer & image processing setup:
 RUN apt-get update \
@@ -74,7 +71,7 @@ RUN composer create-project --no-install typo3/cms-base-distribution:^11 typo3 \
   && cd html \
   && ln -s ../typo3/public/* . \
   && ln -s ../typo3/public/.htaccess \
-  && a2enmod php7.4 \
+  # && a2enmod php7.4 \
   && echo '<Directory /var/www/html>\n  AllowOverride All\n</Directory>' >> /etc/apache2/sites-available/typo3.conf \
   && a2ensite typo3 \
   && sed -i '12a UseCanonicalName On' /etc/apache2/sites-available/000-default.conf \
@@ -87,5 +84,5 @@ RUN composer create-project --no-install typo3/cms-base-distribution:^11 typo3 \
 COPY docker-entrypoint.sh /
 # Fix wrong line endings in the startup script:
 RUN sed -i.bak 's/\r$//' /docker-entrypoint.sh
-# Run startup script & start apache2 (https://github.com/docker-library/php/blob/master/7.4/bullseye/apache/apache2-foreground)
+# Run startup script & start apache2 (https://github.com/docker-library/php/blob/master/8.3/bullseye/apache/apache2-foreground)
 CMD /docker-entrypoint.sh & apache2-foreground
