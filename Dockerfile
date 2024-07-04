@@ -3,23 +3,16 @@ FROM php:7.4-apache
 
 LABEL maintainer='Christos Sidiropoulos <Christos.Sidiropoulos@uni-mannheim.de>'
 
-ENV DB_ADDR=localhost
-ENV DB_PORT=3306
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
-EXPOSE 80
-
 ## TYPO3 r11 ##
-# This Dockerfile aimes to install a working typo3 v11 instance which serves as a basisimage.
+# This Dockerfile aimes to install a working TYPO3 v11 instance which serves as a basisimage.
 # Based on this guide: https://github.com/UB-Mannheim/kitodo-presentation/wiki
 
 # Workaround for "E: Package 'php-XXX' has no installation candidate" from https://hub.docker.com/_/php/ :
 RUN rm /etc/apt/preferences.d/no-debian-php
-
-#For baseimages other than php:7.4-apache:
-#RUN apt-get install -y apache2
 
 # Upgrade system and install further php dependencies & composer & image processing setup:
 RUN apt-get update \
@@ -43,7 +36,7 @@ RUN apt-get update \
     git \
     unzip \
     # for docker entrypoint:
-    wait-for-it \ 
+    wait-for-it \
   # newest composer version:
   && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && php composer-setup.php --install-dir /usr/bin --filename composer \
@@ -61,9 +54,10 @@ RUN apt-get update \
   && sed -i '/de_DE.UTF-8/s/^# //g' /etc/locale.gen \
   && locale-gen
 
-# Install and setup Typo3 & fix Typo3 warnings/problems:
+# Install and setup TYPO3 & fix TYPO3 warnings/problems:
 WORKDIR /var/www/
-RUN composer create-project --no-install typo3/cms-base-distribution:^11 typo3 \
+RUN export COMPOSER_ALLOW_SUPERUSER=1 \
+  && composer create-project --no-install typo3/cms-base-distribution:^11 typo3 \
   && composer config --working-dir typo3/ --no-plugins allow-plugins.helhum/typo3-console-plugin true \
   && composer install --working-dir typo3/ \
   && touch typo3/public/FIRST_INSTALL \
@@ -76,7 +70,7 @@ RUN composer create-project --no-install typo3/cms-base-distribution:^11 typo3 \
   && a2ensite typo3 \
   && sed -i '12a UseCanonicalName On' /etc/apache2/sites-available/000-default.conf \
   # Fixing Low PHP script execution time & PHP max_input_vars very low:
-  && echo ';Settings for Typo3: \nmax_execution_time=240 \nmax_input_vars=1500' >> /etc/php/7.4/mods-available/typo3.ini \
+  && echo ';Settings for TYPO3: \nmax_execution_time=240 \nmax_input_vars=1500' >> /etc/php/7.4/mods-available/typo3.ini \
   && echo 'xdebug.max_nesting_level = 500' >> /etc/php/7.4/apache2/conf.d/20-xdebug.ini \
   && phpenmod typo3
 
