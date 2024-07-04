@@ -9,8 +9,6 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
-EXPOSE 80
-
 ## TYPO3 r11 ##
 # This Dockerfile aimes to install a working typo3 v11 instance which serves as a basisimage.
 # Based on this guide: https://github.com/UB-Mannheim/kitodo-presentation/wiki
@@ -76,13 +74,13 @@ RUN composer create-project --no-install typo3/cms-base-distribution:^11 typo3 \
   && a2ensite typo3 \
   && sed -i '12a UseCanonicalName On' /etc/apache2/sites-available/000-default.conf \
   # Fixing Low PHP script execution time & PHP max_input_vars very low:
-  && echo ';Settings for Typo3: \nmax_execution_time=240 \nmax_input_vars=1500' >> /etc/php/7.4/mods-available/typo3.ini \
-  && echo 'xdebug.max_nesting_level = 500' >> /etc/php/7.4/apache2/conf.d/20-xdebug.ini \
+  && echo ';Settings for Typo3: \nmax_execution_time=240 \nmax_input_vars=1500' >> /etc/php/8.2/mods-available/typo3.ini \
+  && echo 'xdebug.max_nesting_level = 500' >> /etc/php/8.2/apache2/conf.d/20-xdebug.ini \
   && phpenmod typo3
 
 # Copy startup script into the container:
 COPY docker-entrypoint.sh /
 # Fix wrong line endings in the startup script:
-RUN sed -i.bak 's/\r$//' /docker-entrypoint.sh
+# RUN sed -i.bak 's/\r$//' /docker-entrypoint.sh
 # Run startup script & start apache2 (https://github.com/docker-library/php/blob/master/8.3/bullseye/apache/apache2-foreground)
 CMD /docker-entrypoint.sh & apache2-foreground
