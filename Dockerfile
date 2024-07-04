@@ -11,23 +11,20 @@ ENV LC_ALL en_US.UTF-8
 # This Dockerfile aimes to install a working TYPO3 v11 instance which serves as a basisimage.
 # Based on this guide: https://github.com/UB-Mannheim/kitodo-presentation/wiki
 
-# Workaround for "E: Package 'php-XXX' has no installation candidate" from https://hub.docker.com/_/php/ :
-RUN rm /etc/apt/preferences.d/no-debian-php
-
 # Upgrade system and install further php dependencies & composer & image processing setup:
 RUN apt-get update \
   && apt-get -y upgrade \
   && apt-get install -y --no-install-recommends \
-    # database & php dependencies:
     mariadb-client \
-    libapache2-mod-php \
-    php-curl \
-    php-gd \
-    php-intl \
-    php-mysql \
-    php-xml \
-    php-zip \
     locales \
+    # for PHP modules:
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libmagickwand-dev \
+    libpng-dev \
+    libxml2-dev \
+    libzip-dev \
+    libcurl4-openssl-dev \
     # TYPO3 dependencies:
     ghostscript \
     graphicsmagick \
@@ -54,6 +51,16 @@ RUN apt-get update \
   && sed -i '/de_DE.UTF-8/s/^# //g' /etc/locale.gen \
   && locale-gen
 
+# Install required PHP modules
+ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+  && docker-php-ext-install -j$(nproc) \
+    # curl \
+    gd \
+    intl \
+    mysqli \
+    xml \
+    zip
+
 # Install and setup TYPO3 & fix TYPO3 warnings/problems:
 WORKDIR /var/www/
 RUN export COMPOSER_ALLOW_SUPERUSER=1 \
@@ -65,18 +72,17 @@ RUN export COMPOSER_ALLOW_SUPERUSER=1 \
   && cd html \
   && ln -s ../typo3/public/* . \
   && ln -s ../typo3/public/.htaccess \
-  # && a2enmod php7.4 \
   && echo '<Directory /var/www/html>\n  AllowOverride All\n</Directory>' >> /etc/apache2/sites-available/typo3.conf \
   && a2ensite typo3 \
   && sed -i '12a UseCanonicalName On' /etc/apache2/sites-available/000-default.conf \
   # Fixing Low PHP script execution time & PHP max_input_vars very low:
-  && echo ';Settings for TYPO3: \nmax_execution_time=240 \nmax_input_vars=1500' >> /etc/php/8.2/mods-available/typo3.ini \
-  && echo 'xdebug.max_nesting_level = 500' >> /etc/php/8.2/apache2/conf.d/20-xdebug.ini \
-  && phpenmod typo3
+  && echo ';Settings for TYPO3: \nmax_execution_time=240 \nmax_input_vars=1500' >> /usr/local/etc/php/conf.d/99-typo3.ini \
+  && echo 'xdebug.max_nesting_level = 500' >> /usr/local/etc/php/conf.d/98-xdebug.ini \
+  && chown -R www-data:www-data .
 
 # Copy startup script into the container:
 COPY docker-entrypoint.sh /
 # Fix wrong line endings in the startup script:
-# RUN sed -i.bak 's/\r$//' /docker-entrypoint.sh
+RUN sed -i.bak 's/\r$//' /docker-entrypoint.sh
 # Run startup script & start apache2 (https://github.com/docker-library/php/blob/master/8.3/bullseye/apache/apache2-foreground)
 CMD /docker-entrypoint.sh & apache2-foreground
