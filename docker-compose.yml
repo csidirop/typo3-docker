@@ -10,7 +10,7 @@ services:
     restart: unless-stopped
   main:
     build: .
-    image: csidirop/typo3-v11:11.5
+    image: csidirop/typo3-v11:11.5-php7.4
     ports:
       - "127.0.0.1:80:80"
     environment:
