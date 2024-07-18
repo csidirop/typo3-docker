@@ -3,7 +3,7 @@ This repo provides a simple and clean [docker](https://www.docker.com/) image fo
 
 _All branches are WIP!_
 
-# Docker instructions
+## Docker instructions
 ### Select branch
 There are different [branches](https://github.com/csidirop/typo3-docker/branches) that serve to provide different installations. Those provide following versions:
 
@@ -16,25 +16,26 @@ There are different [branches](https://github.com/csidirop/typo3-docker/branches
 
 <!-- Table created with: https://www.tablesgenerator.com/markdown_tables -->
 
-### Clone this repo
+### Setup
+#### Clone this repo
     git clone https://github.com/csidirop/typo3-docker/
 
-### Checkout Branch
+#### Checkout Branch
     git checkout <branchname>
 
-### Run images:
+#### Run images:
     docker compose up
 
-or  
+or
 
     docker-compose up
 
-### OR to simply build the images:
+#### OR to just build the images:
     docker build -t <anyname> --no-cache
 
 ### Set up TYPO3 with TYPO3 install tool in your browser:
 -> http://localhost/typo3/install.php
 
-# Projects using this image
+## Projects using this image
 
 - [kitodo-presentation-docker](https://github.com/UB-Mannheim/kitodo-presentation-docker)
