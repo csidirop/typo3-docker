@@ -58,6 +58,7 @@ RUN apt-get update \
     gd \
     intl \
     mysqli \
+    opcache \
     xml \
     zip
 
@@ -72,6 +73,11 @@ RUN export COMPOSER_ALLOW_SUPERUSER=1 \
   && cd html \
   && ln -s ../typo3/public/* . \
   && ln -s ../typo3/public/.htaccess \
+  # Add production php.ini:
+  && cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \ 
+  # Enable opcache:
+  && sed -i "s/opcache.enable = .*/opcache.enable = 1/" /usr/local/etc/php/php.ini \
+  && sed -i "s/opcache.enable_cli = .*/opcache.enable_cli = 1/" /usr/local/etc/php/php.ini \
   && echo '<Directory /var/www/html>\n  AllowOverride All\n</Directory>' >> /etc/apache2/sites-available/typo3.conf \
   && a2ensite typo3 \
   && sed -i '12a UseCanonicalName On' /etc/apache2/sites-available/000-default.conf \
