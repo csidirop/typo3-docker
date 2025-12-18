@@ -7,9 +7,8 @@ ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
 
-## TYPO3 r11 ##
-# This Dockerfile aimes to install a working TYPO3 v11 instance which serves as a basisimage.
-# Based on this guide: https://github.com/UB-Mannheim/kitodo-presentation/wiki
+## TYPO3 r12 ##
+# This Dockerfile aimes to install a working TYPO3 v12 instance which serves as a basisimage.
 
 # Upgrade system and install further php dependencies & composer & image processing setup:
 RUN apt-get update \
@@ -84,7 +83,10 @@ RUN export COMPOSER_ALLOW_SUPERUSER=1 \
   # Fixing Low PHP script execution time & PHP max_input_vars very low:
   && echo ';Settings for TYPO3: \nmax_execution_time=240 \nmax_input_vars=1500' >> /usr/local/etc/php/conf.d/99-typo3.ini \
   && echo 'xdebug.max_nesting_level = 500' >> /usr/local/etc/php/conf.d/98-xdebug.ini \
-  && chown -R www-data:www-data .
+  # Fix system locale not set on UTF-8 file system:
+  && mkdir -p /var/www/typo3/config/system/ \
+  && printf "%s\n" "<?php \$GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLocale'] = 'de_DE.utf8';" > /var/www/typo3/config/system/additional.php \
+  && chown -R www-data:www-data /var/www/
 
 # Copy startup script into the container:
 COPY docker-entrypoint.sh /
