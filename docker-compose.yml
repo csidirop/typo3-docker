@@ -3,14 +3,14 @@ services:
     image: mariadb:10
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-      - MYSQL_DATABASE=typo3-v11
+      - MYSQL_DATABASE=typo3-v12
       - MYSQL_USER=typo3
       - MYSQL_PASSWORD=password
     #volumes:
     restart: unless-stopped
   main:
     build: .
-    image: csidirop/typo3-v11:11.5
+    image: csidirop/typo3-v12:12.4
     ports:
       - "127.0.0.1:80:80"
     environment:

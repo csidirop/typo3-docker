@@ -1,5 +1,5 @@
 # Baseimage PHP 8.3 with Apache2 on Debian 11 bullseye:
-FROM php:8.3-apache
+FROM php:8.4-apache
 
 LABEL maintainer='Christos Sidiropoulos <Christos.Sidiropoulos@uni-mannheim.de>'
 
@@ -65,7 +65,7 @@ RUN apt-get update \
 # Install and setup TYPO3 & fix TYPO3 warnings/problems:
 WORKDIR /var/www/
 RUN export COMPOSER_ALLOW_SUPERUSER=1 \
-  && composer create-project --no-install --no-interaction --no-security-blocking typo3/cms-base-distribution:^11 typo3 \
+  && composer create-project --no-install --no-interaction --no-security-blocking typo3/cms-base-distribution:^12 typo3 \
   && composer config --working-dir typo3/ --no-plugins allow-plugins.helhum/typo3-console-plugin true \
   && composer update --working-dir typo3/ --no-interaction --no-security-blocking \
   && touch typo3/public/FIRST_INSTALL \
@@ -74,7 +74,7 @@ RUN export COMPOSER_ALLOW_SUPERUSER=1 \
   && ln -s ../typo3/public/* . \
   && ln -s ../typo3/public/.htaccess \
   # Add production php.ini:
-  && cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \ 
+  && cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \
   # Enable opcache:
   && sed -i "s/opcache.enable = .*/opcache.enable = 1/" /usr/local/etc/php/php.ini \
   && sed -i "s/opcache.enable_cli = .*/opcache.enable_cli = 1/" /usr/local/etc/php/php.ini \
