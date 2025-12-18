@@ -31,7 +31,7 @@ or
     docker-compose up
 
 #### OR to just build the images:
-    docker build -t <anyname> --no-cache
+    docker build -t <anyname> --no-cache .
 
 ### Set up TYPO3 with TYPO3 install tool in your browser:
 -> http://localhost/typo3/install.php

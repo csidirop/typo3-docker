@@ -65,9 +65,9 @@ RUN apt-get update \
 # Install and setup TYPO3 & fix TYPO3 warnings/problems:
 WORKDIR /var/www/
 RUN export COMPOSER_ALLOW_SUPERUSER=1 \
-  && composer create-project --no-install typo3/cms-base-distribution:^11 typo3 \
+  && composer create-project --no-install --no-interaction --no-security-blocking typo3/cms-base-distribution:^11 typo3 \
   && composer config --working-dir typo3/ --no-plugins allow-plugins.helhum/typo3-console-plugin true \
-  && composer install --working-dir typo3/ \
+  && composer update --working-dir typo3/ --no-interaction --no-security-blocking \
   && touch typo3/public/FIRST_INSTALL \
   && chown -R www-data: typo3 \
   && cd html \
@@ -88,7 +88,8 @@ RUN export COMPOSER_ALLOW_SUPERUSER=1 \
 
 # Copy startup script into the container:
 COPY docker-entrypoint.sh /
-# Fix wrong line endings in the startup script:
-RUN sed -i.bak 's/\r$//' /docker-entrypoint.sh
+# Fix wrong line endings in the startup script and make it executable:
+RUN sed -i.bak 's/\r$//' /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh
+
 # Run startup script & start apache2 (https://github.com/docker-library/php/blob/master/8.3/bullseye/apache/apache2-foreground)
 CMD /docker-entrypoint.sh & apache2-foreground
