@@ -3,9 +3,9 @@ FROM php:8.3-apache
 
 LABEL maintainer='Christos Sidiropoulos <Christos.Sidiropoulos@uni-mannheim.de>'
 
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
 
 ## TYPO3 r11 ##
 # This Dockerfile aimes to install a working TYPO3 v11 instance which serves as a basisimage.
