@@ -29,6 +29,6 @@ wait-for-it -t "$DB_WAIT_TIMEOUT" "${DB_ADDR}:${DB_PORT}"
 # ADD CODE HERE
 
 # Finished:
-echo 'Ready for setup: http://localhost/typo3/install.php '
+echo 'Ready for setup: http://localhost/ '
 
 exec docker-php-entrypoint "$@"

@@ -6,8 +6,8 @@ FROM php:8.4-apache-bookworm
 
 LABEL maintainer='Christos Sidiropoulos <Christos.Sidiropoulos@uni-mannheim.de>'
 
-## TYPO3 r13 ##
-# This Dockerfile aims to install a working TYPO3 v13 instance which serves as a basisimage.
+## TYPO3 v14 ##
+# This Dockerfile aims to install a working TYPO3 v14 instance which serves as a base image.
 
 # Upgrade the system and install runtime dependencies:
 RUN apt-get update \
@@ -76,9 +76,6 @@ ENV LC_ALL=en_US.UTF-8
 # Install and setup Composer:
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 
-# Install and setup Composer:
-COPY --from=composer /usr/bin/composer /usr/local/bin/composer
-
 # Install and setup TYPO3 & fix TYPO3 warnings/problems:
 COPY typo3.conf /etc/apache2/sites-available/typo3.conf
 WORKDIR /var/www/
@@ -87,7 +84,7 @@ RUN COMPOSER_ALLOW_SUPERUSER=1 composer create-project \
     --no-interaction \
     --no-progress \
     --prefer-dist \
-    typo3/cms-base-distribution:^13.4 typo3 \
+    typo3/cms-base-distribution:^14 typo3 \
   && touch typo3/public/FIRST_INSTALL \
   # Add production php.ini:
   && cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \
@@ -97,7 +94,7 @@ RUN COMPOSER_ALLOW_SUPERUSER=1 composer create-project \
   # Add TYPO3 and OPcache settings:
   && printf '%s\n' \
     '; Settings for TYPO3' \
-    'memory_limit=256M' \
+    'memory_limit=512M' \
     'max_execution_time=240' \
     'max_input_vars=1500' \
     'post_max_size=10M' \
