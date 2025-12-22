@@ -65,7 +65,7 @@ RUN apt-get update \
 # Install and setup TYPO3 & fix TYPO3 warnings/problems:
 WORKDIR /var/www/
 RUN export COMPOSER_ALLOW_SUPERUSER=1 \
-  && composer create-project --no-install --no-interaction --no-security-blocking typo3/cms-base-distribution:^13 typo3 \
+  && composer create-project --no-install --no-interaction --no-security-blocking typo3/cms-base-distribution:^14 typo3 \
   && composer config --working-dir typo3/ --no-plugins allow-plugins.helhum/typo3-console-plugin true \
   && composer update --working-dir typo3/ --no-interaction --no-security-blocking \
   && touch typo3/public/FIRST_INSTALL \
