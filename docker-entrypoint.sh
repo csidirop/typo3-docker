@@ -10,4 +10,4 @@ wait-for-it -t 0 ${DB_ADDR}:${DB_PORT}
 # ADD CODE HERE
 
 # Finished:
-echo 'Ready for setup: http://localhost/typo3/install.php '
+echo 'Ready for setup: http://localhost/ '

@@ -9,7 +9,8 @@ There are different [branches](https://github.com/csidirop/typo3-docker/branches
 
 | **branch** | **TYPO3 version** | **PHP version** | **OS** | **base image** | **last commit** |
 |---|---|---|---|---|---|
-| [main](https://github.com/csidirop/typo3-docker/tree/main) | v13.4 | 8.4 | Debian 12 Bookworm | [php:8.4-apache](https://github.com/docker-library/php/blob/5c037abaf9dc0095e29807c048d9d1b97e6a9716/8.4/bookworm/apache/Dockerfile) | [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/csidirop/typo3-docker/main?label=%20)](https://github.com/csidirop/typo3-docker/main/commits/main)  |
+| [main](https://github.com/csidirop/typo3-docker/tree/main) | v14.x | 8.4 | Debian 12 Bookworm | [php:8.4-apache](https://github.com/docker-library/php/blob/5c037abaf9dc0095e29807c048d9d1b97e6a9716/8.4/bookworm/apache/Dockerfile) | [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/csidirop/typo3-docker/main?label=%20)](https://github.com/csidirop/typo3-docker/main/commits/main)  |
+| [typo3-v14.x](https://github.com/csidirop/typo3-docker/tree/typo3-v14.x) | v14.3 | 8.4 | Debian 12 Bookworm | [php:8.4-apache](https://github.com/docker-library/php/blob/5c037abaf9dc0095e29807c048d9d1b97e6a9716/8.4/bookworm/apache/Dockerfile) | [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/csidirop/typo3-docker/typo3-v14.x?label=%20)](https://github.com/csidirop/typo3-docker/typo3-v14.x/commits/main) | |
 | [typo3-v13.x](https://github.com/csidirop/typo3-docker/tree/typo3-v13.x) | v13.4 | 8.4 | Debian 12 Bookworm | [php:8.4-apache](https://github.com/docker-library/php/blob/5c037abaf9dc0095e29807c048d9d1b97e6a9716/8.4/bookworm/apache/Dockerfile) | [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/csidirop/typo3-docker/typo3-v13.x?label=%20)](https://github.com/csidirop/typo3-docker/typo3-v13.x/commits/main) | |
 | [typo3-v12.x](https://github.com/csidirop/typo3-docker/tree/typo3-v12.x) | v12.4 | 8.4 | Debian 12 Bookworm | [php:8.4-apache](https://github.com/docker-library/php/blob/5c037abaf9dc0095e29807c048d9d1b97e6a9716/8.4/bookworm/apache/Dockerfile) | [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/csidirop/typo3-docker/typo3-v12.x?label=%20)](https://github.com/csidirop/typo3-docker/typo3-v12.x/commits/main) | |
 | [typo3-v11.x](https://github.com/csidirop/typo3-docker/tree/typo3-v11.x) | v11.5 | 8.3 | Debian 12 Bookworm | [php:8.3-apache](https://github.com/docker-library/php/blob/5c037abaf9dc0095e29807c048d9d1b97e6a9716/8.3/bookworm/apache/Dockerfile) | [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/csidirop/typo3-docker/typo3-v11.x?label=%20)](https://github.com/csidirop/typo3-docker/typo3-v11.x/commits/main) | |
@@ -36,7 +37,7 @@ or
     docker build -t <anyname> --no-cache .
 
 ### Set up TYPO3 with TYPO3 install tool in your browser:
--> http://localhost/typo3/install.php
+-> http://localhost/
 
 ## Projects using this image
 
