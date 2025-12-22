@@ -10,7 +10,7 @@ services:
     restart: unless-stopped
   main:
     build: .
-    image: csidirop/typo3-v12:12.4
+    image: csidirop/typo3-v13:13.4
     ports:
       - "127.0.0.1:80:80"
     environment:

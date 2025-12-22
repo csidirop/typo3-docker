@@ -7,8 +7,8 @@ ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
 
-## TYPO3 r12 ##
-# This Dockerfile aimes to install a working TYPO3 v12 instance which serves as a basisimage.
+## TYPO3 r13 ##
+# This Dockerfile aims to install a working TYPO3 v13 instance which serves as a basisimage.
 
 # Upgrade system and install further php dependencies & composer & image processing setup:
 RUN apt-get update \
@@ -50,10 +50,11 @@ RUN apt-get update \
   && sed -i '/de_DE.UTF-8/s/^# //g' /etc/locale.gen \
   && locale-gen
 
-# Install required PHP modules
+# Install required PHP modules:
  RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
   && docker-php-ext-install -j$(nproc) \
     # curl \
+    exif \
     gd \
     intl \
     mysqli \
@@ -64,7 +65,7 @@ RUN apt-get update \
 # Install and setup TYPO3 & fix TYPO3 warnings/problems:
 WORKDIR /var/www/
 RUN export COMPOSER_ALLOW_SUPERUSER=1 \
-  && composer create-project --no-install --no-interaction --no-security-blocking typo3/cms-base-distribution:^12 typo3 \
+  && composer create-project --no-install --no-interaction --no-security-blocking typo3/cms-base-distribution:^13 typo3 \
   && composer config --working-dir typo3/ --no-plugins allow-plugins.helhum/typo3-console-plugin true \
   && composer update --working-dir typo3/ --no-interaction --no-security-blocking \
   && touch typo3/public/FIRST_INSTALL \
