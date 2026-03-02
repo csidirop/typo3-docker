@@ -62,24 +62,22 @@ RUN apt-get update \
     zip
 
 # Install and setup TYPO3 & fix TYPO3 warnings/problems:
+COPY typo3.conf /etc/apache2/sites-available/typo3.conf
 WORKDIR /var/www/
 RUN export COMPOSER_ALLOW_SUPERUSER=1 \
   && composer create-project --no-install --no-interaction --no-security-blocking typo3/cms-base-distribution:^12 typo3 \
   && composer config --working-dir typo3/ --no-plugins allow-plugins.helhum/typo3-console-plugin true \
   && composer update --working-dir typo3/ --no-interaction --no-security-blocking \
   && touch typo3/public/FIRST_INSTALL \
-  && chown -R www-data: typo3 \
-  && cd html \
-  && ln -s ../typo3/public/* . \
-  && ln -s ../typo3/public/.htaccess \
+  && chown -R www-data:www-data typo3 \
   # Add production php.ini:
   && cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \
+  # Enable apache site configuration for TYPO3:
+  && a2dissite 000-default \
+  && a2ensite typo3 \
   # Enable opcache:
   && sed -i "s/opcache.enable = .*/opcache.enable = 1/" /usr/local/etc/php/php.ini \
   && sed -i "s/opcache.enable_cli = .*/opcache.enable_cli = 1/" /usr/local/etc/php/php.ini \
-  && echo '<Directory /var/www/html>\n  AllowOverride All\n</Directory>' >> /etc/apache2/sites-available/typo3.conf \
-  && a2ensite typo3 \
-  && sed -i '12a UseCanonicalName On' /etc/apache2/sites-available/000-default.conf \
   # Fixing Low PHP script execution time & PHP max_input_vars very low:
   && echo ';Settings for TYPO3: \nmax_execution_time=240 \nmax_input_vars=1500' >> /usr/local/etc/php/conf.d/99-typo3.ini \
   && echo 'xdebug.max_nesting_level = 500' >> /usr/local/etc/php/conf.d/98-xdebug.ini \
