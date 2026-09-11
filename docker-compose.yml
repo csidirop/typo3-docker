@@ -3,7 +3,7 @@ services:
     image: mariadb:10
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-      - MYSQL_DATABASE=typo3-v12
+      - MYSQL_DATABASE=typo3-v13
       - MYSQL_USER=typo3
       - MYSQL_PASSWORD=password
     #volumes:
