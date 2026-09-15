@@ -1,3 +1,6 @@
+# Composer is copied from the official image instead of downloaded at build time.
+FROM composer:2 AS composer
+
 # Base image: PHP 8.4 with Apache on Debian 12 Bookworm.
 FROM php:8.4-apache-bookworm
 
@@ -24,15 +27,11 @@ RUN apt-get update \
     ghostscript \
     graphicsmagick \
     graphicsmagick-imagemagick-compat \
-    # for newest composer version:
+    # Composer dependencies:
     git \
     unzip \
     # for docker entrypoint:
     wait-for-it \
-  # newest composer version:
-  && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-  && php composer-setup.php --install-dir /usr/bin --filename composer \
-  && php -r "unlink('composer-setup.php');" \
   # cleanup:
   && apt-get autoremove -y \
   && apt-get clean \
@@ -78,13 +77,18 @@ ENV LC_ALL=en_US.UTF-8
 # Install and setup Composer:
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 
+# Install and setup Composer:
+COPY --from=composer /usr/bin/composer /usr/local/bin/composer
+
 # Install and setup TYPO3 & fix TYPO3 warnings/problems:
 COPY typo3.conf /etc/apache2/sites-available/typo3.conf
 WORKDIR /var/www/
-RUN export COMPOSER_ALLOW_SUPERUSER=1 \
-  && composer create-project --no-install --no-interaction --no-security-blocking typo3/cms-base-distribution:^13 typo3 \
-  && composer config --working-dir typo3/ --no-plugins allow-plugins.helhum/typo3-console-plugin true \
-  && composer update --working-dir typo3/ --no-interaction --no-security-blocking \
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer create-project \
+    --no-dev \
+    --no-interaction \
+    --no-progress \
+    --prefer-dist \
+    typo3/cms-base-distribution:^13.4 typo3 \
   && touch typo3/public/FIRST_INSTALL \
   # Add production php.ini:
   && cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \
