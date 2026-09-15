@@ -6,6 +6,12 @@ services:
       - MYSQL_DATABASE=typo3-v13
       - MYSQL_USER=typo3
       - MYSQL_PASSWORD=password
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 30s
+      interval: 10s
+      timeout: 5s
+      retries: 5
     #volumes:
     restart: unless-stopped
   main:
@@ -18,5 +24,6 @@ services:
       - DB_PORT=3306
     #volumes:
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     restart: unless-stopped
