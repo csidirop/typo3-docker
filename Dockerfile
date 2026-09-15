@@ -9,33 +9,27 @@ LABEL maintainer='Christos Sidiropoulos <Christos.Sidiropoulos@uni-mannheim.de>'
 ## TYPO3 r13 ##
 # This Dockerfile aims to install a working TYPO3 v13 instance which serves as a basisimage.
 
-# Upgrade system and install further php dependencies & composer & image processing setup:
+# Upgrade the system and install runtime dependencies:
 RUN apt-get update \
   && apt-get -y upgrade \
   && apt-get install -y --no-install-recommends \
-    mariadb-client \
-    locales \
-    # for PHP modules:
-    libfreetype6-dev \
-    libjpeg62-turbo-dev \
-    libmagickwand-dev \
-    libpng-dev \
-    libxml2-dev \
-    libzip-dev \
-    libcurl4-openssl-dev \
     # TYPO3 dependencies:
     ghostscript \
     graphicsmagick \
     graphicsmagick-imagemagick-compat \
+    libfreetype6 \
+    libicu72 \
+    libjpeg62-turbo \
+    libpng16-16 \
+    libxml2 \
+    libzip4 \
+    locales \
+    mariadb-client \
     # Composer dependencies:
     git \
     unzip \
     # for docker entrypoint:
     wait-for-it \
-  # cleanup:
-  && apt-get autoremove -y \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* \
   # apache mods:
   && a2enmod headers \
   && a2enmod expires \
@@ -43,12 +37,17 @@ RUN apt-get update \
   # Gen locales:
   && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
   && sed -i '/de_DE.UTF-8/s/^# //g' /etc/locale.gen \
-  && locale-gen
-
-# Install required PHP modules:
- RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+  && locale-gen \
+  # Install build dependencies and compile the required PHP modules:
+  && apt-get install -y --no-install-recommends \
+    libfreetype6-dev \
+    libicu-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    libxml2-dev \
+    libzip-dev \
+  && docker-php-ext-configure gd --with-freetype --with-jpeg \
   && docker-php-ext-install -j$(nproc) \
-    # curl \
     exif \
     gd \
     intl \

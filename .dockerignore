@@ -1,0 +1,6 @@
+# Only send files used by COPY instructions to the Docker build context.
+**
+!Dockerfile
+!.dockerignore
+!docker-entrypoint.sh
+!typo3.conf
