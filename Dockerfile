@@ -1,8 +1,8 @@
 # Composer is copied from the official image instead of downloaded at build time.
 FROM composer:2 AS composer
 
-# Base image: PHP 8.4 with Apache on Debian 12 Bookworm.
-FROM php:8.4-apache-bookworm
+# Base image: PHP 8.4 with Apache on Debian 13 Trixie.
+FROM php:8.4-apache-trixie
 
 LABEL maintainer='Christos Sidiropoulos <Christos.Sidiropoulos@uni-mannheim.de>'
 
@@ -18,11 +18,11 @@ RUN apt-get update \
     graphicsmagick \
     graphicsmagick-imagemagick-compat \
     libfreetype6 \
-    libicu72 \
+    libicu76 \
     libjpeg62-turbo \
-    libpng16-16 \
+    libpng16-16t64 \
     libxml2 \
-    libzip4 \
+    libzip5 \
     locales \
     mariadb-client \
     # Composer dependencies:
