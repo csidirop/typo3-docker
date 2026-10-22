@@ -15,7 +15,10 @@ services:
     #volumes:
     restart: unless-stopped
   main:
-    build: .
+    build:
+      context: .
+      # Refresh mutable base-image tags such as php:8.4-apache-trixie:
+      pull: true
     image: csidirop/typo3-v13:13.4
     ports:
       - "127.0.0.1:80:80"
